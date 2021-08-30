@@ -1,0 +1,361 @@
+3.13. Importing with from 27
+ Dividing a long program into functions allows you to debug the parts one at a time
+and then assemble them into a working whole.
+ Well-designed functions are often useful for many programs. Once you write and
+debug one, you can reuse it.
+3.13 Importing with from
+Python provides two ways to import modules; we have already seen one:
+>>> import math
+>>> print math
+<module 'math' (built-in)>
+>>> print math.pi
+3.14159265359
+If you import math, you get a module object named math. The module object contains
+constants like pi and functions like sin and exp.
+But if you try to access pi directly, you get an error.
+>>> print pi
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+NameError: name 'pi' is not defined
+As an alternative, you can import an object from a module like this:
+>>> from math import pi
+Now you can access pi directly, without dot notation.
+>>> print pi
+3.14159265359
+Or you can use the star operator to import everything from the module:
+>>> from math import *
+>>> cos(pi)
+-1.0
+The advantage of importing everything from the math module is that your code can be
+more concise. The disadvantage is that there might be conflicts between names defined in
+different modules, or between a name from a module and one of your variables.
+3.14 Debugging
+If you are using a text editor to write your scripts, you might run into problems with spaces
+and tabs. The best way to avoid these problems is to use spaces exclusively (no tabs). Most
+text editors that know about Python do this by default, but some don’t.
+Tabs and spaces are usually invisible, which makes them hard to debug, so try to find an
+editor that manages indentation for you.
+Also, don’t forget to save your program before you run it. Some development environments
+do this automatically, but some don’t. In that case the program you are looking at in
+the text editor is not the same as the program you are running.
+28 Chapter 3. Functions
+Debugging can take a long time if you keep running the same, incorrect, program over and
+over!
+Make sure that the code you are looking at is the code you are running. If you’re not sure,
+put something like print 'hello' at the beginning of the program and run it again. If you
+don’t see hello, you’re not running the right program!
+3.15 Glossary
+function: A named sequence of statements that performs some useful operation. Functions
+may or may not take arguments and may or may not produce a result.
+function definition: A statement that creates a new function, specifying its name, parameters,
+and the statements it executes.
+function object: A value created by a function definition. The name of the function is a
+variable that refers to a function object.
+header: The first line of a function definition.
+body: The sequence of statements inside a function definition.
+parameter: A name used inside a function to refer to the value passed as an argument.
+function call: A statement that executes a function. It consists of the function name followed
+by an argument list.
+argument: A value provided to a function when the function is called. This value is assigned
+to the corresponding parameter in the function.
+local variable: A variable defined inside a function. A local variable can only be used
+inside its function.
+return value: The result of a function. If a function call is used as an expression, the return
+value is the value of the expression.
+fruitful function: A function that returns a value.
+void function: A function that doesn’t return a value.
+module: A file that contains a collection of related functions and other definitions.
+import statement: A statement that reads a module file and creates a module object.
+module object: A value created by an import statement that provides access to the values
+defined in a module.
+dot notation: The syntax for calling a function in another module by specifying the module
+name followed by a dot (period) and the function name.
+composition: Using an expression as part of a larger expression, or a statement as part of
+a larger statement.
+flow of execution: The order in which statements are executed during a program run.
+3.16. Exercises 29
+stack diagram: A graphical representation of a stack of functions, their variables, and the
+values they refer to.
+frame: A box in a stack diagram that represents a function call. It contains the local variables
+and parameters of the function.
+traceback: A list of the functions that are executing, printed when an exception occurs.
+3.16 Exercises
+Exercise 3.3. Python provides a built-in function called len that returns the length of a string, so
+the value of len('allen') is 5.
+Write a function named right_justify that takes a string named s as a parameter and prints the
+string with enough leading spaces so that the last letter of the string is in column 70 of the display.
+>>> right_justify('allen')
+allen
+Exercise 3.4. A function object is a value you can assign to a variable or pass as an argument. For
+example, do_twice is a function that takes a function object as an argument and calls it twice:
+def do_twice(f):
+f()
+f()
+Here’s an example that uses do_twice to call a function named print_spam twice.
+def print_spam():
+print 'spam'
+do_twice(print_spam)
+1. Type this example into a script and test it.
+2. Modify do_twice so that it takes two arguments, a function object and a value, and calls the
+function twice, passing the value as an argument.
+3. Write a more general version of print_spam, called print_twice, that takes a string as a
+parameter and prints it twice.
+4. Use the modified version of do_twice to call print_twice twice, passing 'spam' as an
+argument.
+5. Define a new function called do_four that takes a function object and a value and calls the
+function four times, passing the value as a parameter. There should be only two statements in
+the body of this function, not four.
+Solution: http: // thinkpython. com/ code/ do_ four. py .
+Exercise 3.5. This exercise can be done using only the statements and other features we have learned
+so far.
+1. Write a function that draws a grid like the following:
+30 Chapter 3. Functions
++ - - - - + - - - - +
+| | |
+| | |
+| | |
+| | |
++ - - - - + - - - - +
+| | |
+| | |
+| | |
+| | |
++ - - - - + - - - - +
+Hint: to print more than one value on a line, you can print a comma-separated sequence:
+print '+', '-'
+If the sequence ends with a comma, Python leaves the line unfinished, so the value printed
+next appears on the same line.
+print '+',
+print '-'
+The output of these statements is '+ -'.
+A print statement all by itself ends the current line and goes to the next line.
+2. Write a function that draws a similar grid with four rows and four columns.
+Solution: http: // thinkpython. com/ code/ grid. py . Credit: This exercise is based on an
+exercise in Oualline, Practical C Programming, Third Edition, O’Reilly Media, 1997.
+Chapter 4
+Case study: interface design
+Code examples from this chapter are available from http://thinkpython.com/code/
+polygon.py.
+4.1 TurtleWorld
+To accompany this book, I have written a package called Swampy. You can download
+Swampy from http://thinkpython.com/swampy; follow the instructions there to install
+Swampy on your system.
+A package is a collection of modules; one of the modules in Swampy is TurtleWorld,
+which provides a set of functions for drawing lines by steering turtles around the screen.
+If Swampy is installed as a package on your system, you can import TurtleWorld like this:
+from swampy.TurtleWorld import *
+If you downloaded the Swampy modules but did not install them as a package, you can either
+work in the directory that contains the Swampy files, or add that directory to Python’s
+search path. Then you can import TurtleWorld like this:
+from TurtleWorld import *
+The details of the installation process and setting Python’s search path depend on your
+system, so rather than include those details here, I will try to maintain current information
+for several systems at http://thinkpython.com/swampy
+Create a file named mypolygon.py and type in the following code:
+from swampy.TurtleWorld import *
+world = TurtleWorld()
+bob = Turtle()
+print bob
+wait_for_user()
+32 Chapter 4. Case study: interface design
+The first line imports everything from the TurtleWorld module in the swampy package.
+The next lines create a TurtleWorld assigned to world and a Turtle assigned to bob. Printing
+bob yields something like:
+<TurtleWorld.Turtle instance at 0xb7bfbf4c>
+This means that bob refers to an instance of a Turtle as defined in module TurtleWorld.
+In this context, “instance” means a member of a set; this Turtle is one of the set of possible
+Turtles.
+wait_for_user tells TurtleWorld to wait for the user to do something, although in this case
+there’s not much for the user to do except close the window.
+TurtleWorld provides several turtle-steering functions: fd and bk for forward and backward,
+and lt and rt for left and right turns. Also, each Turtle is holding a pen, which is
+either down or up; if the pen is down, the Turtle leaves a trail when it moves. The functions
+pu and pd stand for “pen up” and “pen down.”
+To draw a right angle, add these lines to the program (after creating bob and before calling
+wait_for_user):
+fd(bob, 100)
+lt(bob)
+fd(bob, 100)
+The first line tells bob to take 100 steps forward. The second line tells him to turn left.
+When you run this program, you should see bob move east and then north, leaving two
+line segments behind.
+Now modify the program to draw a square. Don’t go on until you’ve got it working!
+4.2 Simple repetition
+Chances are you wrote something like this (leaving out the code that creates TurtleWorld
+and waits for the user):
+fd(bob, 100)
+lt(bob)
+fd(bob, 100)
+lt(bob)
+fd(bob, 100)
+lt(bob)
+fd(bob, 100)
+We can do the same thing more concisely with a for statement. Add this example to
+mypolygon.py and run it again:
+for i in range(4):
+print 'Hello!'
+You should see something like this:
+4.3. Exercises 33
+Hello!
+Hello!
+Hello!
+Hello!
+This is the simplest use of the for statement; we will see more later. But that should be
+enough to let you rewrite your square-drawing program. Don’t go on until you do.
+Here is a for statement that draws a square:
+for i in range(4):
+fd(bob, 100)
+lt(bob)
+The syntax of a for statement is similar to a function definition. It has a header that ends
+with a colon and an indented body. The body can contain any number of statements.
+A for statement is sometimes called a loop because the flow of execution runs through the
+body and then loops back to the top. In this case, it runs the body four times.
+This version is actually a little different from the previous square-drawing code because it
+makes another turn after drawing the last side of the square. The extra turn takes a little
+more time, but it simplifies the code if we do the same thing every time through the loop.
+This version also has the effect of leaving the turtle back in the starting position, facing in
+the starting direction.
+4.3 Exercises
+The following is a series of exercises using TurtleWorld. They are meant to be fun, but they
+have a point, too. While you are working on them, think about what the point is.
+The following sections have solutions to the exercises, so don’t look until you have finished
+(or at least tried).
+1. Write a function called square that takes a parameter named t, which is a turtle. It
+should use the turtle to draw a square.
+Write a function call that passes bob as an argument to square, and then run the
+program again.
+2. Add another parameter, named length, to square. Modify the body so length of the
+sides is length, and then modify the function call to provide a second argument. Run
+the program again. Test your program with a range of values for length.
+3. The functions lt and rt make 90-degree turns by default, but you can provide a
+second argument that specifies the number of degrees. For example, lt(bob, 45)
+turns bob 45 degrees to the left.
+Make a copy of square and change the name to polygon. Add another parameter
+named n and modify the body so it draws an n-sided regular polygon. Hint: The
+exterior angles of an n-sided regular polygon are 360/n degrees.
+4. Write a function called circle that takes a turtle, t, and radius, r, as parameters and
+that draws an approximate circle by invoking polygon with an appropriate length
+and number of sides. Test your function with a range of values of r.
+34 Chapter 4. Case study: interface design
+Hint: figure out the circumference of the circle and make sure that length * n =
+circumference.
+Another hint: if bob is too slow for you, you can speed him up by changing
+bob.delay, which is the time between moves, in seconds. bob.delay = 0.01 ought
+to get him moving.
+5. Make a more general version of circle called arc that takes an additional parameter
+angle, which determines what fraction of a circle to draw. angle is in units of degrees,
+so when angle=360, arc should draw a complete circle.
+4.4 Encapsulation
+The first exercise asks you to put your square-drawing code into a function definition and
+then call the function, passing the turtle as a parameter. Here is a solution:
+def square(t):
+for i in range(4):
+fd(t, 100)
+lt(t)
+square(bob)
+The innermost statements, fd and lt are indented twice to show that they are inside the
+for loop, which is inside the function definition. The next line, square(bob), is flush with
+the left margin, so that is the end of both the for loop and the function definition.
+Inside the function, t refers to the same turtle bob refers to, so lt(t) has the same effect as
+lt(bob). So why not call the parameter bob? The idea is that t can be any turtle, not just
+bob, so you could create a second turtle and pass it as an argument to square:
+ray = Turtle()
+square(ray)
+Wrapping a piece of code up in a function is called encapsulation. One of the benefits of
+encapsulation is that it attaches a name to the code, which serves as a kind of documentation.
+Another advantage is that if you re-use the code, it is more concise to call a function
+twice than to copy and paste the body!
+4.5 Generalization
+The next step is to add a length parameter to square. Here is a solution:
+def square(t, length):
+for i in range(4):
+fd(t, length)
+lt(t)
+square(bob, 100)
+Adding a parameter to a function is called generalization because it makes the function
+more general: in the previous version, the square is always the same size; in this version it
+can be any size.
+4.6. Interface design 35
+The next step is also a generalization. Instead of drawing squares, polygon draws regular
+polygons with any number of sides. Here is a solution :rule
+def polygon(t, n, length):
+angle = 360.0 / n
+for i in range(n):
+fd(t, length)
+lt(t, angle)
+polygon(bob, 7, 70)
+This draws a 7-sided polygon with side length 70. If you have more than a few numeric
+arguments, it is easy to forget what they are, or what order they should be in. It is legal,
+and sometimes helpful, to include the names of the parameters in the argument list:
+polygon(bob, n=7, length=70)
+These are called keyword arguments because they include the parameter names as “keywords”
+(not to be confused with Python keywords like while and def).
+This syntax makes the program more readable. It is also a reminder about how arguments
+and parameters work: when you call a function, the arguments are assigned to the parameters.
+4.6 Interface design
+The next step is to write circle, which takes a radius, r, as a parameter. Here is a simple
+solution that uses polygon to draw a 50-sided polygon:
+def circle(t, r):
+circumference = 2 * math.pi * r
+n = 50
+length = circumference / n
+polygon(t, n, length)
+The first line computes the circumference of a circle with radius r using the formula 2pr.
+Since we use math.pi, we have to import math. By convention, import statements are
+usually at the beginning of the script.
+n is the number of line segments in our approximation of a circle, so length is the length
+of each segment. Thus, polygon draws a 50-sides polygon that approximates a circle with
+radius r.
+One limitation of this solution is that n is a constant, which means that for very big circles,
+the line segments are too long, and for small circles, we waste time drawing very small
+segments. One solution would be to generalize the function by taking n as a parameter.
+This would give the user (whoever calls circle) more control, but the interface would be
+less clean.
+The interface of a function is a summary of how it is used: what are the parameters? What
+does the function do? And what is the return value? An interface is “clean” if it is “as
+simple as possible, but not simpler. (Einstein)”
+In this example, r belongs in the interface because it specifies the circle to be drawn. n is
+less appropriate because it pertains to the details of how the circle should be rendered.
+36 Chapter 4. Case study: interface design
+Rather than clutter up the interface, it is better to choose an appropriate value of n depending
+on circumference:
+def circle(t, r):
+circumference = 2 * math.pi * r
+n = int(circumference / 3) + 1
+length = circumference / n
+polygon(t, n, length)
+Now the number of segments is (approximately) circumference/3, so the length of each
+segment is (approximately) 3, which is small enough that the circles look good, but big
+enough to be efficient, and appropriate for any size circle.
+4.7 Refactoring
+When I wrote circle, I was able to re-use polygon because a many-sided polygon is a good
+approximation of a circle. But arc is not as cooperative; we can’t use polygon or circle to
+draw an arc.
+One alternative is to start with a copy of polygon and transform it into arc. The result
+might look like this:
+def arc(t, r, angle):
+arc_length = 2 * math.pi * r * angle / 360
+n = int(arc_length / 3) + 1
+step_length = arc_length / n
+step_angle = float(angle) / n
+for i in range(n):
+fd(t, step_length)
+lt(t, step_angle)
+The second half of this function looks like polygon, but we can’t re-use polygon without
+changing the interface. We could generalize polygon to take an angle as a third argument,
+but then polygon would no longer be an appropriate name! Instead, let’s call the more
+general function polyline:
+def polyline(t, n, length, angle):
+for i in range(n):
+fd(t, length)
+lt(t, angle)
+Now we can rewrite polygon and arc to use polyline:
+def polygon(t, n, length):
+angle = 360.0 / n
+polyline(t, n, length, angle)
+def arc(t, r, angle):
+arc_length = 2 * math.pi * r * angle / 360
+n = int(arc_length / 3) + 1
+step_length = arc_length / n
+step_angle = float(angle) / n
+polyline(t, n, step_length, step_angle)
